@@ -51,8 +51,11 @@ public class MaxSubSeq {
 			return pos;
 		}
 		
-		void delete() { //Wie deleten ? nach value, Listenelement ?
-			
+		void delete(MyElement p) {
+			if(p.next ==tail) throw new IllegalArgumentException("Kann nicht geloescht werden");
+			MyElement q = p.next.next;
+			p.next = q;
+			if(p.next == tail) {tail.next = p;}
 		}
 	}
 
