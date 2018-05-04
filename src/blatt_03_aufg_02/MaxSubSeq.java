@@ -67,8 +67,7 @@ public class MaxSubSeq {
 	static void maximalSubList(MyList list) {
 		// Implementieren Sie hier den Algorithm.
 		MyElement current = list.head;
-		int scanmax = 0;
-		int bismax = 0;
+		int scanmax = 0, bismax = 0;
 		int lower = 1;
 		int upper = 1;
 		int currentLower = 1;
