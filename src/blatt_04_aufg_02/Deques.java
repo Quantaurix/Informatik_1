@@ -17,12 +17,60 @@ public class Deques {
 		
 		public boolean isEmpty() {return count == 0;}
 		private boolean isFull() {return count == max;}
-		public int head() {if(!isEmpty()) {return deque[headptr-1];} else throw new IndexOutOfBoundsException("Deque leer!");}
-		public int tail() {if(!isEmpty()) {return deque[tailptr+1];} else throw new IndexOutOfBoundsException("Deque leer!");}
-		public void addFront(int val) {if(!isFull()) {deque[headptr] = val;count++; if(headptr == max-1) {headptr = 0;} else {headptr++;}}else throw new IndexOutOfBoundsException("Deque voll!");}
-		public void addBack(int val) {if(!isFull()) {deque[tailptr] = val;count++; if(tailptr == 0) {tailptr = max-1;} else {tailptr--;}}else throw new IndexOutOfBoundsException("Deque voll!");}
-		public int removeFront() {if(!isEmpty()) {count--; if(headptr == 0) {headptr = max-1;return deque[headptr];}else {headptr--;return deque[headptr];}} else throw new IndexOutOfBoundsException("Deque leer!");}
-		public int removeBack() {if(!isEmpty()) {count--; if(tailptr == max-1) {tailptr = 0;return deque[tailptr];}else {tailptr++;return deque[tailptr];}} else throw new IndexOutOfBoundsException("Deque leer!");}
+		
+		public int head() {
+			if(!isEmpty()) {
+				if(headptr != 0) {
+					return deque[headptr-1];
+				}else {
+					return deque[max-1];
+				}
+			} else throw new IndexOutOfBoundsException("Deque leer!");}
+		
+		public int tail() {
+			if(!isEmpty()) {
+				if(tailptr != max-1) {
+					return deque[tailptr+1];
+				} else {
+					return deque[0];
+				}
+			} else throw new IndexOutOfBoundsException("Deque leer!");}
+		
+		public void addFront(int val) {
+			if(!isFull()) {
+				deque[headptr] = val;
+				count++;
+				if(headptr == max-1){headptr = 0;} else {headptr++;}
+			} else throw new IndexOutOfBoundsException("Deque voll!");}
+		
+		public void addBack(int val) {
+			if(!isFull()) {
+				deque[tailptr] = val;
+				count++;
+				if(tailptr == 0) {tailptr = max-1;} else {tailptr--;}
+			} else throw new IndexOutOfBoundsException("Deque voll!");}
+		
+		public int removeFront() {
+			if(!isEmpty()) {
+				count--;
+				if(headptr == 0) {
+					headptr = max-1;
+					return deque[headptr];
+				} else {
+					headptr--;return deque[headptr];
+					}
+			} else throw new IndexOutOfBoundsException("Deque leer!");}
+		
+		public int removeBack() {
+			if(!isEmpty()) {
+				count--;
+				if(tailptr == max-1) {
+					tailptr = 0;
+					return deque[tailptr];
+				} else {
+					tailptr++;return deque[tailptr];
+					}
+			} else throw new IndexOutOfBoundsException("Deque leer!");}
 
 	}
 	
