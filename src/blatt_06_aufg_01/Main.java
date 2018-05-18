@@ -32,7 +32,7 @@ public class Main {
 			System.out.print(a[i]+",");
 		}
 		System.out.println();
-		System.out.println(quick +" quicktime: "+quicktime + "; selecttime: " + selecttime);
+		System.out.println(quick +" quicktime: "+quicktime + "; selecttime: " + selecttime + " " + select);
 	}
 	
 	public static int quickselect( int key, int lo, int hi) {
@@ -96,7 +96,7 @@ public class Main {
 		int t;
 		if ((j - i) < 74) {
 			quick_sort(i, j);
-			return A[i + k - 1];
+			return A[i + k +1];
 		} else {
 			for (m = 0; m < ((j - i + 1) / 5); m++) {
 				quick_sort((i + 5 * m), (i + 5 * m + 4));
