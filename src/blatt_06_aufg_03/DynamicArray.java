@@ -1,6 +1,7 @@
 package blatt_06_aufg_03;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public class DynamicArray {
 
@@ -78,6 +79,23 @@ public class DynamicArray {
 		System.out.println(a.getElement(4).getVal());
 		a.delete();
 		a.print();
+		
+		long start = System.nanoTime();
+		for(int o = 0; o < 10000000; o++) {
+			a.insert(new Item(1,(int)(Math.random()*100)));	
+		}
+		long end = System.nanoTime();
+		long dynamicTime = end-start;
+		
+		LinkedList<Item> list = new LinkedList<>();
+		start = System.nanoTime();
+		for(int o = 0; o < 10000000; o++) {
+			list.add(new Item(1,(int)(Math.random()*100)));	
+		}
+		end = System.nanoTime();
+		long ListTime = end-start;
+		System.out.println("Dynamic Time: " + dynamicTime/1000000 + "; List Time: " + ListTime/1000000);
+		
 	}
 }
 
