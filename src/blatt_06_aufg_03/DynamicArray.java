@@ -1,6 +1,5 @@
 package blatt_06_aufg_03;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 public class DynamicArray {
@@ -55,30 +54,6 @@ public class DynamicArray {
 	
 	public static void main(String[] args) {
 		DynamicArray a = new DynamicArray(1);
-		Item<Integer> i = new Item<>(5,5);
-		Item<Integer> j = new Item<>(3,6);
-		Item<Integer> k = new Item<>(3,7);
-		Item<Integer> l = new Item<>(3,123);
-		Item<Integer> m = new Item<>(3,9);
-
-
-
-		a.print();
-		a.insert(i);
-		a.print();
-		a.insert(j);
-		a.print();
-		a.insert(k);
-		a.print();
-		a.insert(l);
-		a.print();
-		a.insert(m);
-		a.print();
-		a.setElement(2, new Item<Integer>(3,134));
-		a.print();
-		System.out.println(a.getElement(4).getVal());
-		a.delete();
-		a.print();
 		
 		long start = System.nanoTime();
 		for(int o = 0; o < 10000000; o++) {
