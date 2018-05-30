@@ -1,3 +1,4 @@
+package blatt_07_aufg_03;
 
 import java.util.Random;
 
@@ -27,27 +28,63 @@ public class Cuckoo {
 		private int b;
 		private int m;
 	}
+	
+	int m;
+	int[] t0, t1;
+	UniversalHash uh,ah;
 
 	// Erzeugt eine Hashtabelle der Größe m.
 	public Cuckoo(int m) {
-
+		this.m = m;
+		t0 = new int[m/2];
+		t1 = new int[m/2];
+		for (int i = 0; i < t1.length; i++) {
+			t0[i] = Integer.MIN_VALUE;
+			t1[i] = Integer.MIN_VALUE;
+		}
+		uh = new UniversalHash(m/2);
+		ah = new UniversalHash(m/2);
 	}
 
 	// Testet, ob ein gegebener Schlüssel in der Hashtabelle ist.
 	public boolean find(int key) {
-		return false;
+		return t0[uh.compute(key)] == key || t1[ah.compute(key)] == key ;
 	}
 
 	public void insert(int key) {
-
+		int i;
+		for(i = 1; i <= m/2; i++) {
+			if(t0[uh.compute(key)] == Integer.MIN_VALUE) {t0[uh.compute(key)] = key; return;}
+			if(t1[ah.compute(key)] == Integer.MIN_VALUE) {t1[ah.compute(key)] = key; return;}
+			if(i%2 == 0) {
+				//1
+				int newkey = t1[ah.compute(key)];
+				t1[ah.compute(key)] = key;
+				key = newkey;
+			}else {
+				//0
+				int newkey = t0[uh.compute(key)];
+				t0[uh.compute(key)] = key;
+				key = newkey;			}
+			
+		}
+		
 	}
 
 	public void remove(int key) {
-
+		if(t0[uh.compute(key)] == key ) t0[uh.compute(key)] = Integer.MIN_VALUE;
+		if(t1[ah.compute(key)] == key ) t1[uh.compute(key)] = Integer.MIN_VALUE;
 	}
 
 	private void rehash() {
-		// Regeneriert die Hashtabelle mit zwei neuen Hashfunktionen.
+		uh = new UniversalHash(m/2);
+		ah = new UniversalHash(m/2);
+		for(int i = 0; i < m/2;i++) {
+			insert(t0[i]);
+		}
+		for(int i = 0; i < m/2; i++) {
+			insert(t1[i]);
+		}
 	}
 
 	public static void main(String[] args) {
