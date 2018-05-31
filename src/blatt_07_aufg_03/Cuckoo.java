@@ -19,7 +19,7 @@ public class Cuckoo {
 		public int compute(int k) {
 			int ak = (a * k) % p;
 			int akb = (ak + b) % p;
-			return akb % m;
+			return Math.abs(akb % m);
 		}
 
 		// Die Zahlen a und b sind beliebige positive Zahlen aus dem Bereich [1, ..., p-1] 
@@ -38,10 +38,6 @@ public class Cuckoo {
 		this.m = m;
 		t0 = new int[m/2];
 		t1 = new int[m/2];
-		for (int i = 0; i < t1.length; i++) {
-			t0[i] = Integer.MIN_VALUE;
-			t1[i] = Integer.MIN_VALUE;
-		}
 		uh = new UniversalHash(m/2);
 		ah = new UniversalHash(m/2);
 	}
@@ -54,8 +50,8 @@ public class Cuckoo {
 	public void insert(int key) {
 		int i;
 		for(i = 1; i <= m/2; i++) {
-			if(t0[uh.compute(key)] == Integer.MIN_VALUE) {t0[uh.compute(key)] = key; return;}
-			if(t1[ah.compute(key)] == Integer.MIN_VALUE) {t1[ah.compute(key)] = key; return;}
+			if(t0[uh.compute(key)] == 0) {t0[uh.compute(key)] = key; return;}
+			if(t1[ah.compute(key)] == 0) {t1[ah.compute(key)] = key; return;}
 			if(i%2 == 0) {
 				//1
 				int newkey = t1[ah.compute(key)];
@@ -72,18 +68,22 @@ public class Cuckoo {
 	}
 
 	public void remove(int key) {
-		if(t0[uh.compute(key)] == key ) t0[uh.compute(key)] = Integer.MIN_VALUE;
-		if(t1[ah.compute(key)] == key ) t1[uh.compute(key)] = Integer.MIN_VALUE;
+		if(t0[uh.compute(key)] == key ) t0[uh.compute(key)] = 0;
+		if(t1[ah.compute(key)] == key ) t1[uh.compute(key)] = 0;
 	}
 
 	private void rehash() {
 		uh = new UniversalHash(m/2);
 		ah = new UniversalHash(m/2);
+		int[] t0clone = t0.clone();
+		int[] t1clone = t1.clone();
+		t0 = new int[m/2];
+		t1 = new int[m/2];
 		for(int i = 0; i < m/2;i++) {
-			insert(t0[i]);
+			insert(t0clone[i]);
 		}
 		for(int i = 0; i < m/2; i++) {
-			insert(t1[i]);
+			insert(t1clone[i]);
 		}
 	}
 
