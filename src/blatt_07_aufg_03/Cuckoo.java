@@ -19,6 +19,7 @@ public class Cuckoo {
 		public int compute(int k) {
 			int ak = (a * k) % p;
 			int akb = (ak + b) % p;
+			int akbmodm = Math.abs(akb % m);
 			return Math.abs(akb % m);
 		}
 
@@ -38,6 +39,10 @@ public class Cuckoo {
 		this.m = m;
 		t0 = new int[m/2];
 		t1 = new int[m/2];
+		for(int i = 0; i < m/2; i++) {
+			t0[i] = -1;
+			t1[i] = -1;
+		}
 		uh = new UniversalHash(m/2);
 		ah = new UniversalHash(m/2);
 	}
@@ -50,8 +55,8 @@ public class Cuckoo {
 	public void insert(int key) {
 		int i;
 		for(i = 1; i <= m/2; i++) {
-			if(t0[uh.compute(key)] == 0) {t0[uh.compute(key)] = key; return;}
-			if(t1[ah.compute(key)] == 0) {t1[ah.compute(key)] = key; return;}
+			if(t0[uh.compute(key)] == -1) {t0[uh.compute(key)] = key; return;}
+			if(t1[ah.compute(key)] == -1) {t1[ah.compute(key)] = key; return;}
 			if(i%2 == 0) {
 				//1
 				int newkey = t1[ah.compute(key)];
@@ -61,15 +66,16 @@ public class Cuckoo {
 				//0
 				int newkey = t0[uh.compute(key)];
 				t0[uh.compute(key)] = key;
-				key = newkey;			}
+				key = newkey;	
+			}
 			
 		}
-		
+		if(i > m/2) rehash();	
 	}
 
 	public void remove(int key) {
-		if(t0[uh.compute(key)] == key ) t0[uh.compute(key)] = 0;
-		if(t1[ah.compute(key)] == key ) t1[uh.compute(key)] = 0;
+		if(t0[uh.compute(key)] == key ) t0[uh.compute(key)] = -1;
+		if(t1[ah.compute(key)] == key ) t1[uh.compute(key)] = -1;
 	}
 
 	private void rehash() {
@@ -79,10 +85,12 @@ public class Cuckoo {
 		int[] t1clone = t1.clone();
 		t0 = new int[m/2];
 		t1 = new int[m/2];
+		for(int i = 0; i < m/2; i++) {
+			t0[i] = -1;
+			t1[i] = -1;
+		}
 		for(int i = 0; i < m/2;i++) {
 			insert(t0clone[i]);
-		}
-		for(int i = 0; i < m/2; i++) {
 			insert(t1clone[i]);
 		}
 	}
@@ -106,7 +114,7 @@ public class Cuckoo {
 			if(shadow[i] && !ht.find(i)) {
 				System.out.println(i + " is NOT in hash table but should be");
 				errors++;
-			}else if(shadow[i] && !ht.find(i)) {
+			}else if(!shadow[i] && ht.find(i)) {
 				System.out.println(i + " is in hash table but should NOT be");
 				errors++;
 			}
