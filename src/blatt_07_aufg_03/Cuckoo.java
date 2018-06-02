@@ -51,8 +51,8 @@ public class Cuckoo {
 		if(find(key)) return;
 		int i;
 		for(i = 1; i <= m/2; i++) {
-			if(t0[h0.compute(key)] == 0) t0[h0.compute(key)] = key;
-			else if(t1[h1.compute(key)] == 0) t1[h1.compute(key)] = key;
+			if(t0[h0.compute(key)] == 0) {t0[h0.compute(key)] = key;return;}
+			else if(t1[h1.compute(key)] == 0) {t1[h1.compute(key)] = key;return;}
 			else {
 				if(i % 2 == 0) {
 					int tmp = t1[h1.compute(key)];
@@ -67,7 +67,6 @@ public class Cuckoo {
 		}
 		if(i > m/2) {
 			rehash();
-			i = 1;
 			insert(key);
 		}
 	}
@@ -82,8 +81,8 @@ public class Cuckoo {
 		h0 = new UniversalHash(m/2);
 		h1 = new UniversalHash(m/2);
 		for(int i = 0; i < t0.length; i++) {
-			if(t0[i] != 0 && t0[i] != t0[h0.compute(t0[i])]) {int toInsert = t0[i]; t0[i] = 0; insert(toInsert);}
-			if(t1[i] != 0 && t1[i] != t1[h1.compute(t1[i])]) {int toInsert = t1[i]; t1[i] = 0; insert(toInsert);}
+			if(t0[i] != 0 && i != h0.compute(t0[i])) {int toInsert = t0[i]; t0[i] = 0; insert(toInsert);}
+			if(t1[i] != 0 && i != h1.compute(t1[i])) {int toInsert = t1[i]; t1[i] = 0; insert(toInsert);}
 		}
 	}
 
