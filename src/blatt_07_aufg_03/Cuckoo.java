@@ -19,7 +19,6 @@ public class Cuckoo {
 		public int compute(int k) {
 			int ak = (a * k) % p;
 			int akb = (ak + b) % p;
-			int akbmodm = Math.abs(akb % m);
 			return Math.abs(akb % m);
 		}
 
@@ -30,68 +29,61 @@ public class Cuckoo {
 		private int m;
 	}
 	
+	UniversalHash h0, h1;
+	int [] t0,t1;
 	int m;
-	int[] t0, t1;
-	UniversalHash uh,ah;
 
 	// Erzeugt eine Hashtabelle der Größe m.
 	public Cuckoo(int m) {
-		this.m = m;
+		h0 = new UniversalHash(m/2);
+		h1 = new UniversalHash(m/2);
 		t0 = new int[m/2];
 		t1 = new int[m/2];
-		for(int i = 0; i < m/2; i++) {
-			t0[i] = -1;
-			t1[i] = -1;
-		}
-		uh = new UniversalHash(m/2);
-		ah = new UniversalHash(m/2);
+		this.m = m;
 	}
 
 	// Testet, ob ein gegebener Schlüssel in der Hashtabelle ist.
 	public boolean find(int key) {
-		return t0[uh.compute(key)] == key || t1[ah.compute(key)] == key ;
+		return t0[h0.compute(key)] == key || t1[h1.compute(key)] == key;
 	}
 
 	public void insert(int key) {
+		if(find(key)) return;
 		int i;
 		for(i = 1; i <= m/2; i++) {
-			if(t0[uh.compute(key)] == -1) {t0[uh.compute(key)] = key; return;}
-			if(t1[ah.compute(key)] == -1) {t1[ah.compute(key)] = key; return;}
-			if(i%2 == 0) {
-				//1
-				int newkey = t1[ah.compute(key)];
-				t1[ah.compute(key)] = key;
-				key = newkey;
-			}else {
-				//0
-				int newkey = t0[uh.compute(key)];
-				t0[uh.compute(key)] = key;
-				key = newkey;	
+			if(t0[h0.compute(key)] == 0) t0[h0.compute(key)] = key;
+			else if(t1[h1.compute(key)] == 0) t1[h1.compute(key)] = key;
+			else {
+				if(i % 2 == 0) {
+					int tmp = t1[h1.compute(key)];
+					t1[h1.compute(key)] = key;
+					key = tmp;
+				}else {
+					int tmp = t0[h0.compute(key)];
+					t0[h0.compute(key)] = key;
+					key = tmp;
+				}
 			}
-			
 		}
-		if(i > m/2) rehash();	
+		if(i > m/2) {
+			rehash();
+			i = 1;
+			insert(key);
+		}
 	}
 
 	public void remove(int key) {
-		if(t0[uh.compute(key)] == key ) t0[uh.compute(key)] = -1;
-		if(t1[ah.compute(key)] == key ) t1[uh.compute(key)] = -1;
+		if(t0[h0.compute(key)] == key) t0[h0.compute(key)] = 0;
+		if(t1[h1.compute(key)] == key) t1[h1.compute(key)] = 0;
 	}
 
 	private void rehash() {
-		uh = new UniversalHash(m/2);
-		ah = new UniversalHash(m/2);
-		int[] t0clone = t0.clone();
-		int[] t1clone = t1.clone();
-		t0 = new int[m/2];
-		t1 = new int[m/2];
-		for(int i = 0; i < m/2; i++) {
-			t0[i] = -1;
-			t1[i] = -1;
-		}
-		for(int i = 0; i < m/2;i++) {
-			insert(t0clone[i]);
-			insert(t1clone[i]);
+		// Regeneriert die Hashtabelle mit zwei neuen Hashfunktionen.
+		h0 = new UniversalHash(m/2);
+		h1 = new UniversalHash(m/2);
+		for(int i = 0; i < t0.length; i++) {
+			if(t0[i] != 0 && t0[i] != t0[h0.compute(t0[i])]) {int toInsert = t0[i]; t0[i] = 0; insert(toInsert);}
+			if(t1[i] != 0 && t1[i] != t1[h1.compute(t1[i])]) {int toInsert = t1[i]; t1[i] = 0; insert(toInsert);}
 		}
 	}
 
@@ -114,7 +106,7 @@ public class Cuckoo {
 			if(shadow[i] && !ht.find(i)) {
 				System.out.println(i + " is NOT in hash table but should be");
 				errors++;
-			}else if(!shadow[i] && ht.find(i)) {
+			}else if(shadow[i] && !ht.find(i)) {
 				System.out.println(i + " is in hash table but should NOT be");
 				errors++;
 			}
