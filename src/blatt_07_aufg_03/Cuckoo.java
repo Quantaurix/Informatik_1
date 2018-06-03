@@ -88,8 +88,7 @@ public class Cuckoo {
 
 	public static void main(String[] args) {
 		Cuckoo ht;
-		int errorstotal=0;
-		for(int j = 0; j < 20; j++) {
+
 		ht= new Cuckoo(64);
 
 		int n = 0;
@@ -114,11 +113,8 @@ public class Cuckoo {
 				errors++;
 			}
 		}
-		errorstotal += errors;
 		System.out.println("There were " + errors + " errors");
-		System.out.println("XXXXXXXXXXXXXXXXXXX");
-	}
-		System.out.println("ERRORTOTAL: "+ errorstotal);
+
 	}
 }
 
