@@ -69,7 +69,7 @@ public class Cuckoo {
 			rehash();
 			insert(key);
 		}
-	}
+	}	
 
 	public void remove(int key) {
 		if(t0[h0.compute(key)] == key) t0[h0.compute(key)] = 0;
@@ -87,16 +87,20 @@ public class Cuckoo {
 	}
 
 	public static void main(String[] args) {
-		Cuckoo ht = new Cuckoo(64);
+		Cuckoo ht;
+		int errorstotal=0;
+		for(int j = 0; j < 20; j++) {
+		ht= new Cuckoo(64);
 
 		int n = 0;
 		int m = 0;
 		boolean[] shadow = new boolean[32 * 10];
-		while(n < 32 && m < shadow.length) {
+		while(n <32 && m < shadow.length) {
 			m += rnd.nextInt(9) + 1;
 			n++;
 
 			shadow[m] = true;
+			System.out.println(m);
 			ht.insert(m);
 		}
 
@@ -110,8 +114,11 @@ public class Cuckoo {
 				errors++;
 			}
 		}
-
+		errorstotal += errors;
 		System.out.println("There were " + errors + " errors");
+		System.out.println("XXXXXXXXXXXXXXXXXXX");
+	}
+		System.out.println("ERRORTOTAL: "+ errorstotal);
 	}
 }
 
