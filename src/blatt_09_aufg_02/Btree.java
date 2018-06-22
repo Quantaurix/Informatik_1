@@ -36,91 +36,6 @@ public class Btree {
 		}
 	}
 
-	public void insert2(int key) {
-		// Implementieren Sie hier den Algorithmus zum Einfügen.
-		// Beachten Sie, dass Sie ggf. eine neue Wurzel (Variable root) erzeugen
-		// müssen und dass root auf null initialisiert wird.
-		
-		//tree empty
-		if(root == null) {root = new Node(); root.keys[0] = key;root.count = 1;root.isLeaf=true;return;}
-		
-		//search insert node
-		Node insert = root;
-		while(true) {
-			int i;
-			for(i = 0; i < insert.count; i++) {				
-				if(insert.keys[i] > key)
-					break;
-			}
-
-			if(insert.isLeaf) break;
-			insert = insert.links[i];
-		}
-		
-		//insert in node
-		Node bro = null,bak=null;
-		boolean insertNode = true;
-		while(true) {
-			//create new root
-			if(insert == null) {
-				Node newRoot = new Node(); root = newRoot;root.count = 1;root.isLeaf = false;
-				root.keys[0] = key;
-				root.links[0] = bak;
-				root.links[1] = bro;
-				bak.parent = root;
-				bro.parent = root;
-				return;
-			}
-			
-		//find insert pos
-		int insertPos = 0;
-		for(insertPos = 0; insertPos < insert.count;insertPos++) {
-			if(insert.keys[insertPos] > key) break;
-		}
-		//move keys and childs to right
-		for(int j = insert.count-1 ;j >= insertPos ;j--) {
-			insert.keys[j+1] = insert.keys[j];
-			insert.links[j+2] = insert.links[j+1];
-
-		}
-		insert.keys[insertPos] = key;
-		if(bro != null) insert.links[insertPos+1] = bro;
-		insert.count++;
-		
-		//check if insert possible
-		if(insert.count <= 3) return;
-		
-		//node full, split nodes
-		bro = new Node();bro.isLeaf=true;bro.parent=insert.parent;bro.count=0;
-		int medianIndex = insertPos <= 1 ? 2:1;
-		int median = insert.keys[medianIndex];insert.keys[medianIndex] = 0;insert.count--;
-		for(int j = medianIndex+1,k=0; j < insert.keys.length; j++,k++) {
-			bro.keys[k] = insert.keys[j];
-			insert.keys[j] = 0;
-			
-			bro.count++;
-			insert.count--;
-		}
-		for(int j = medianIndex+1,k=0; j < insert.links.length; j++,k++) {
-			
-			
-			bro.links[k] = insert.links[j];
-			insert.links[j] = null;
-			
-		}
-		bak = insert;
-		insert = insert.parent;
-		key = median;
-		/*for(int i = 0; i < bro.links.length;i++) {
-			if(bro.links[i] != null) {bro.isLeaf = false;break;}
-		}*/
-		//if(insertNode) {bro.isLeaf = true;}
-		
-		}
-		
-
-		
-	}
 
 	public void insert(int key) {
 		// Implementieren Sie hier den Algorithmus zum Einfügen.
@@ -231,6 +146,7 @@ public class Btree {
 		}
 	}
 	public static void main(String[] args) {
+		
 		Random rnd = new Random();
 		boolean[] set = new boolean[10000];
 		int[] list = new int[1000];
@@ -263,6 +179,7 @@ public class Btree {
 		}
 		System.out.println("There were " + errors + " errors");
 	}
+	
 
 	private Node root;
 }
