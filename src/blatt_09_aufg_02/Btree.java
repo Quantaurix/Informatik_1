@@ -157,6 +157,7 @@ public class Btree {
 				root.count++;
 				root.links[0] = child;
 				root.links[1] = bro;
+				//update parent pointer of bro's childs to "bro"
 				if(bro.isLeaf==false)
 				{for(int i = 0; i <= bro.count;i++) {
 					bro.links[i].parent = bro;
