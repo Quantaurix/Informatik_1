@@ -178,7 +178,8 @@ public class Btree {
 			}
 		}
 		System.out.println("There were " + errors + " errors");
-	}
+		}
+	
 	
 
 	private Node root;
