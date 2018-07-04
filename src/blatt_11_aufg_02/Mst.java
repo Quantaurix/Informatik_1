@@ -22,6 +22,7 @@ public class Mst {
 		int name;
 		Edge[] edges;
 		int dist;
+		boolean finished = false;
 	}
 
 	public static class DistPrioQueue {
@@ -62,7 +63,9 @@ public class Mst {
 		DistPrioQueue q = new DistPrioQueue();
 		int[] father = new int[V.length];
 		father[0] = 0;
-		for(int i = 1; i < V.length; i++) {
+		V[0].dist = 0;
+		V[0].finished = true;
+		for(int i =0; i < V.length; i++) {
 			q.insert(V[i]);
 		}
 		
@@ -70,14 +73,15 @@ public class Mst {
 		
 		while(!q.isEmpty()) {
 			Node u = q.extractMin();
+			u.finished = true;
 			//geh alle Edges von u durch
 			for(int i = 0; i < V[u.name-1].edges.length; i++) {
 				//current edge
 				Edge v = V[u.name-1].edges[i];
 				
 				//aktualisiere Distanz zum Node, wenn edge weight < distance
-				if(v.weight < v.target.dist){
-				father[v.target.name-1] = u.name;
+				if(!v.target.finished && v.weight < v.target.dist){
+				father[v.target.name-1] = u.name-1;
 				q.decreaseKey(v.target, v.weight);
 				//v.target.dist = v.weight;
 				}
@@ -85,8 +89,8 @@ public class Mst {
 			}
 		}
 		
-		for(int i = 0; i < father.length;i++) {
-			System.out.println("( " + i + " ) ----- ( " + father[i] + " )");
+		for(int i = 1; i < father.length;i++) {
+			System.out.println("( " + (father[i]+1) + " ) ----- ( " + (i+1) + " )");
 		}
 			
 
